@@ -4,16 +4,14 @@ const {
   ERROR_CODE_INTERNALERR,
   ERROR_CODE_BADREQUEST,
   ERROR_CODE_NOTFOUND,
-} = require("../errors");
+} = require("../utils/errors");
 
 // возвращаем все карточки
 module.exports.getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.send(cards))
-    .catch((err) =>
-      res
-        .status(ERROR_CODE_INTERNALERR)
-        .send({ message: `Произошла ошибка ${err}` })
+    .catch(() =>
+      res.status(ERROR_CODE_INTERNALERR).send({ message: "Произошла ошибка" })
     );
 };
 
@@ -30,7 +28,7 @@ module.exports.createCard = (req, res) => {
       } else {
         res
           .status(ERROR_CODE_INTERNALERR)
-          .send({ message: `Произошла ошибка ${err}` });
+          .send({ message: "Произошла ошибка" });
       }
     });
 };
@@ -48,9 +46,15 @@ module.exports.deleteCard = (req, res) => {
       }
     })
     .catch((err) => {
-      res
-        .status(ERROR_CODE_INTERNALERR)
-        .send({ message: `Произошла ошибка ${err}` });
+      if (err.name === "CastError" || err.name === "ValidationError") {
+        res
+          .status(ERROR_CODE_NOTFOUND)
+          .send({ message: `Карточка не найдена` });
+      } else {
+        res
+          .status(ERROR_CODE_INTERNALERR)
+          .send({ message: "Произошла ошибка" });
+      }
     });
 };
 
@@ -78,7 +82,7 @@ module.exports.likeCard = (req, res) => {
       } else {
         res
           .status(ERROR_CODE_INTERNALERR)
-          .send({ message: `Произошла ошибка ${err}` });
+          .send({ message: "Произошла ошибка" });
       }
     });
 };
@@ -106,7 +110,7 @@ module.exports.dislikeCard = (req, res) => {
       } else {
         res
           .status(ERROR_CODE_INTERNALERR)
-          .send({ message: `Произошла ошибка ${err}` });
+          .send({ message: "Произошла ошибка" });
       }
     });
 };

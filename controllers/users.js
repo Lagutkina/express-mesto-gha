@@ -3,22 +3,19 @@ const {
   ERROR_CODE_INTERNALERR,
   ERROR_CODE_BADREQUEST,
   ERROR_CODE_NOTFOUND,
-} = require("../errors");
+} = require("../utils/errors");
 
 // возвращаем всех юзеров
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch((err) =>
-      res
-        .status(ERROR_CODE_INTERNALERR)
-        .send({ message: `Произошла ошибка ${err}` })
+    .catch(() =>
+      res.status(ERROR_CODE_INTERNALERR).send({ message: "Произошла ошибка" })
     );
 };
 
 // возвращем юзера по айди
 module.exports.getUserById = (req, res) => {
-  console.log(req.params);
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
@@ -37,7 +34,7 @@ module.exports.getUserById = (req, res) => {
       } else {
         res
           .status(ERROR_CODE_INTERNALERR)
-          .send({ message: `Произошла ошибка ${err}` });
+          .send({ message: "Произошла ошибка" });
       }
     });
 };
@@ -55,7 +52,7 @@ module.exports.createUser = (req, res) => {
       } else {
         res
           .status(ERROR_CODE_INTERNALERR)
-          .send({ message: `Произошла ошибка ${err}` });
+          .send({ message: "Произошла ошибка" });
       }
     });
 };
@@ -63,7 +60,11 @@ module.exports.createUser = (req, res) => {
 // обновления профиля - name & about
 module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true })
+  User.findByIdAndUpdate(
+    req.user._id,
+    { name, about },
+    { new: true, runValidators: true }
+  )
     .then((user) => {
       if (!user) {
         res
@@ -81,7 +82,7 @@ module.exports.updateUser = (req, res) => {
       } else {
         res
           .status(ERROR_CODE_INTERNALERR)
-          .send({ message: `Произошла ошибка ${err}` });
+          .send({ message: "Произошла ошибка" });
       }
     });
 };
@@ -89,7 +90,11 @@ module.exports.updateUser = (req, res) => {
 // обновление аватара
 module.exports.updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true })
+  User.findByIdAndUpdate(
+    req.user._id,
+    { avatar },
+    { new: true, runValidators: true }
+  )
     .then((user) => {
       if (!user) {
         res
@@ -107,7 +112,7 @@ module.exports.updateUserAvatar = (req, res) => {
       } else {
         res
           .status(ERROR_CODE_INTERNALERR)
-          .send({ message: `Произошла ошибка ${err}` });
+          .send({ message: "Произошла ошибка" });
       }
     });
 };
