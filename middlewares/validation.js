@@ -1,7 +1,8 @@
 /* eslint-disable no-useless-escape */
-const { celebrate, Joi } = require('celebrate');
+const { celebrate, Joi } = require("celebrate");
 
-const RegExp = /^https?:\/\/(www\.)?([-a-z0-9_])*\.([a-z0-9]){2,3}\/?([a-z0-9\-._~:\/?#[\]@!\$&'()*+,;=]?)*/;
+const RegExp =
+  /^https?:\/\/(www\.)?([-a-z0-9_])*\.([a-z0-9]){2,3}\/?([a-z0-9\-._~:\/?#[\]@!\$&'()*+,;=]?)*/;
 
 // user request validations
 
@@ -19,7 +20,7 @@ module.exports.createUserValidation = celebrate({
       if (RegExp.test(value)) {
         return value;
       }
-      return helpers.message('Некорректный формат ссылки');
+      return helpers.message("Некорректный формат ссылки");
     }),
     email: Joi.string().required(),
     password: Joi.string().required().min(6),
@@ -39,7 +40,7 @@ module.exports.updateUserAvatarValidation = celebrate({
       if (RegExp.test(value)) {
         return value;
       }
-      return helpers.message('Некорректный формат ссылки');
+      return helpers.message("Некорректный формат ссылки");
     }),
   }),
 });
@@ -62,7 +63,7 @@ module.exports.createCardValidation = celebrate({
         if (RegExp.test(value)) {
           return value;
         }
-        return helpers.message('Некорректный формат ссылки');
+        return helpers.message("Некорректный формат ссылки");
       }),
   }),
 });
